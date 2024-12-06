@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h1>속성 설정</h1>
+<input type="text" name="mock" th:name="userA"/>
+(소스보기) name="userA"
+
+<h1>속성 추가</h1>
+- th:attrappend =
+<input type="text" class="text" th:attrappend="class=' large'"/>
+(소스보기) class="text large"
+<br/>
+- th:attrprepend =
+<input type="text" class="text" th:attrprepend="class='large '"/>
+(소스보기) class="large text"
+<br/>
+- th:classappend =
+<input type="text" class="text" th:classappend="large"/>
+(소스보기) class="text large"
+<br/>
+- th:attr =
+<input type="text" class="text" th:attr="name='userB'"/>
+(소스보기) name="userB"
+<br/>
+
+<h1>checked 처리</h1>
+- th:checked o
+<input type="checkbox" name="active" th:checked="true"/>
+(소스보기) checked="checked"
+<br/>
+- th:checked x
+<input type="checkbox" name="active" th:checked="false"/>
+(소스보기)
+<br/>
+- checked=false
+<input type="checkbox" name="active" checked="false"/>
+(소스보기) checked="false"
+<br/>
+
+</body>
+</html>

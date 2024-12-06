@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h1>thymeleaf th:href 테스트</h1>
+<ul>
+    <li>
+        param1 =
+        <span th:text="${paramMap['param1']}"></span>
+    </li>
+    <li>
+        param2 =
+        <span th:text="${paramMap['param2']}"></span>
+    </li>
+    <li>
+        path1 =
+        <span th:text="${pathMap['path1']}"></span>
+    </li>
+    <li>
+        path2 =
+        <span th:text="${pathMap['path2']}"></span>
+    </li>
+</ul>
+
+</body>
+</html>
