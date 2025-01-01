@@ -1,7 +1,7 @@
 package hello.jdbc.service;
 
 import hello.jdbc.domain.Member;
-import hello.jdbc.repository.MemberRepository;
+import hello.jdbc.repository.MemberRepositoryEx;
 import hello.jdbc.repository.MemberRepositoryV3;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,8 +21,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * 트랜잭션 - 트랜잭션 템플릿
  */
 class MemberServiceV3_2Test {
-    private MemberRepository memberRepository;
-    private MemberService memberService;
+    private MemberRepositoryEx memberRepository;
+    private MemberServiceEx memberService;
 
     @BeforeEach
     void beforeEach() {

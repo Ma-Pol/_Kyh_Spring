@@ -12,7 +12,7 @@ import java.util.NoSuchElementException;
  * JDBC - DataSource 사용
  */
 @Slf4j
-public class MemberRepositoryV1 implements MemberRepository {
+public class MemberRepositoryV1 implements MemberRepositoryEx {
     private final DataSource dataSource;
 
     public MemberRepositoryV1(DataSource dataSource) {

@@ -1,7 +1,7 @@
 package hello.jdbc.service;
 
 import hello.jdbc.domain.Member;
-import hello.jdbc.repository.MemberRepository;
+import hello.jdbc.repository.MemberRepositoryEx;
 import hello.jdbc.repository.MemberRepositoryV3;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -26,9 +26,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @SpringBootTest
 class MemberServiceV3_4Test {
     @Autowired
-    MemberRepository memberRepository;
+    MemberRepositoryEx memberRepository;
     @Autowired
-    MemberService memberService;
+    MemberServiceEx memberService;
 
     @AfterEach
     void afterEach() throws SQLException {
@@ -47,12 +47,12 @@ class MemberServiceV3_4Test {
         }
 
         @Bean
-        MemberRepository memberRepository() {
+        MemberRepositoryEx memberRepository() {
             return new MemberRepositoryV3(dataSource);
         }
 
         @Bean
-        MemberService memberService() {
+        MemberServiceEx memberService() {
             return new MemberServiceV3_3(memberRepository());
         }
     }

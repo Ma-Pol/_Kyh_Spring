@@ -1,7 +1,7 @@
 package hello.jdbc.service;
 
 import hello.jdbc.domain.Member;
-import hello.jdbc.repository.MemberRepository;
+import hello.jdbc.repository.MemberRepositoryEx;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -15,9 +15,9 @@ import java.sql.SQLException;
  */
 @Slf4j
 @RequiredArgsConstructor
-public class MemberServiceV3_1 implements MemberService {
+public class MemberServiceV3_1 implements MemberServiceEx {
     private final PlatformTransactionManager transactionManager;
-    private final MemberRepository memberRepository;
+    private final MemberRepositoryEx memberRepository;
 
     @Override
     public void accountTransfer(String fromId, String toId, int money) throws SQLException {
