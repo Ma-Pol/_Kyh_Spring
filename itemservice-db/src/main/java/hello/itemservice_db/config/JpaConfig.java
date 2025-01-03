@@ -1,20 +1,18 @@
 package hello.itemservice_db.config;
 
 import hello.itemservice_db.repository.ItemRepository;
-import hello.itemservice_db.repository.mybatis.ItemMapper;
-import hello.itemservice_db.repository.mybatis.MyBatisItemRepository;
+import hello.itemservice_db.repository.jpa.JpaItemRepositoryV1;
 import hello.itemservice_db.service.ItemService;
 import hello.itemservice_db.service.ItemServiceV1;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RequiredArgsConstructor
-@MapperScan(basePackages = "hello.itemservice_db.repository.mybatis") // 지정하지 않아도 문제 없음
-public class MyBatisConfig {
-    private final ItemMapper itemMapper;
+public class JpaConfig {
+    private final EntityManager em;
 
     @Bean
     public ItemService itemService() {
@@ -23,6 +21,6 @@ public class MyBatisConfig {
 
     @Bean
     public ItemRepository itemRepository() {
-        return new MyBatisItemRepository(itemMapper);
+        return new JpaItemRepositoryV1(em);
     }
 }
