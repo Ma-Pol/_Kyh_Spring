@@ -13,11 +13,14 @@ public class ItemRepository {
     private final EntityManager em;
 
     public void save(Item item) {
-        if (item.getId() == null) {
-            em.persist(item); // 상품 id가 없으면 신규 상품이므로 추가
-        } else {
-            em.merge(item); // 상품 id가 있으면 기존 상품이므로 변경
-        }
+        em.persist(item);
+
+        // 병합(merge) 대신 변경감지를 사용
+//        if (item.getId() == null) {
+//            em.persist(item); // 상품 id가 없으면 신규 상품이므로 추가
+//        } else {
+//            em.merge(item); // 상품 id가 있으면 기존 상품이므로 변경
+//        }
     }
 
     public Item findById(Long id) {
