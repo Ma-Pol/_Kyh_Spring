@@ -17,14 +17,33 @@ public class JpaMain {
         tx.begin();
 
         try {
-            insertMember(em, 1L, "memberA");
-//            findMemberById(em, 1L);
-//            updateMember(em, 1L, "MemberJPA");
-//            deleteMember(em, 1L);
-//            findMembers(em);
-//            findMemberByName(em, "memberJPA");
+            // 비영속 (new / transient)
+            Member member = new Member();
+            member.setId(100L);
+            member.setName("HelloJPA");
 
-            tx.commit();
+            // 영속 (managed)
+            System.out.println("===== BEFORE =====");
+            em.persist(member); // 여기서 DB 쿼리가 실행되지 않음(단, 쿼리 생성 후 저장소에 보관함)
+            System.out.println("===== AFTER =====");
+
+            // 준영속 (detached)
+//            em.detach(member);
+
+            // 삭제 (removed) (영속성 컨텍스트에서 객체를 삭제 -> DB 에서 삭제)
+//            em.remove(member);
+
+            Member findMember = em.find(Member.class, 100L); // select 쿼리가 실행되지 않음(1차 캐시 사용)
+            System.out.println("findMember.getId() = " + findMember.getId());
+            System.out.println("findMember.getName() = " + findMember.getName());
+
+            // 영속성 엔티티의 동일성 보장(1차 캐시 활용)
+            Member findMember2 = em.find(Member.class, 100L);
+            System.out.println("member1 == member2: " + (findMember == findMember2));
+
+            findMember.setName("Updated");
+
+            tx.commit(); // 여기서 저장소에 보관해놓은 DB 쿼리가 실행됨
         } catch (Exception e) {
             tx.rollback();
         } finally {
