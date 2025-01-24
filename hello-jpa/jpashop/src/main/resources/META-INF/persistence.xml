@@ -6,24 +6,16 @@
         <properties>
             <!-- 필수 속성 -->
             <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
-            <property name="jakarta.persistence.jdbc.user" value="sa"/>
-            <property name="jakarta.persistence.jdbc.password" value=""/>
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/test"/>
+            <property name="jakarta.persistence.jdbc.user" value="jpa"/>
+            <property name="jakarta.persistence.jdbc.password" value="jpa"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/jpashop"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
 
             <!-- 옵션 -->
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.use_sql_comments" value="true"/>
-
-            <!-- create, update, create-drop, validate, none -->
-            <!--
-                운영 장비에는 절대 create, create-drop, update 를 사용하지 말 것
-                - 개발 초기에는 create 또는 update
-                - 테스트 서버는 update 또는 validate
-                - 스테이징과 운영 서버는 validate 또는 none
-            -->
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
         </properties>
     </persistence-unit>
 
