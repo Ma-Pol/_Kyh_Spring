@@ -18,7 +18,12 @@ public class Team {
 
     private String name;
 
-    // 양방향 연관관계 매핑
-    @OneToMany(mappedBy = "team") // Member 의 변수명 team 과 매핑되었음을 명시, 연관관계의 주인이 아님을 명시
-    List<Member> members = new ArrayList<>();
+    // 다대일 양방향
+//    @OneToMany(mappedBy = "team")
+//    List<Member> members = new ArrayList<>();
+
+    // 일대다 단방향
+    @OneToMany
+    @JoinColumn(name = "team_id")
+    private List<Member> members = new ArrayList<>();
 }
