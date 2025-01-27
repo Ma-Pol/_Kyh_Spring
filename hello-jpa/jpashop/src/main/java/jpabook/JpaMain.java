@@ -4,8 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
-import jpabook.domain.Order;
-import jpabook.domain.OrderItem;
+import jpabook.domain.Book;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -17,13 +16,14 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Order order = new Order();
-//            order.addOrderItem(new OrderItem());
-            em.persist(order);
+            Book book = new Book();
+            book.setName("JPA");
+            book.setPrice(30000);
+            book.setStockQuantity(50);
+            book.setAuthor("김영한");
+            book.setIsbn("isbn");
 
-            OrderItem orderItem = new OrderItem();
-            orderItem.setOrder(order);
-            em.persist(orderItem);
+            em.persist(book);
 
             tx.commit();
         } catch (Exception e) {

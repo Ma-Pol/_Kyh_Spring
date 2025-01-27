@@ -22,6 +22,5 @@ public class Locker {
     // 일대일(locker 테이블에 외래키 존재) 단방향
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    @Column(unique = true)
     private Member member;
 }
