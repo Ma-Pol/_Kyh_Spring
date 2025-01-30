@@ -4,9 +4,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -52,4 +53,40 @@ public class Member extends BaseEntity {
     // 다대다(다대일 - 일대다 풀이)
     @OneToMany(mappedBy = "member")
     private List<MemberProduct> memberProducts = new ArrayList<>();
+
+    // ===============
+
+    @Embedded
+    private Period workPeriod;
+
+    @Embedded
+    private Address homeAddress;
+
+    public void setHomeAddress(Address address) {
+        this.homeAddress = new Address(
+                address.getCity(),
+                address.getStreet(),
+                address.getZipcode()
+        );
+    }
+
+/*
+    @Embedded
+    @AttributeOverrides({ // 동일한 임베디드 타입을 사용하고 싶을 때
+            @AttributeOverride(name = "city", column = @Column(name = "work_city")),
+            @AttributeOverride(name = "street", column = @Column(name = "work_street")),
+            @AttributeOverride(name = "zipcode", column = @Column(name = "work_zipcode"))
+    })
+    private Address workAddress;
+*/
+
+    // 실무에서는 상황에 따라 값 타입 컬렉션 대신 일대다 관계를 고려
+    @ElementCollection
+    @CollectionTable(name = "favorite_food", joinColumns = @JoinColumn(name = "member_id"))
+    @Column(name = "food_name")
+    private Set<String> favoriteFoods = new HashSet<>();
+
+    @ElementCollection
+    @CollectionTable(name = "address", joinColumns = @JoinColumn(name = "member_id"))
+    private List<Address> addressHistory = new ArrayList<>();
 }

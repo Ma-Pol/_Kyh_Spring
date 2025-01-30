@@ -16,15 +16,6 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Book book = new Book();
-            book.setName("JPA");
-            book.setPrice(30000);
-            book.setStockQuantity(50);
-            book.setAuthor("김영한");
-            book.setIsbn("isbn");
-
-            em.persist(book);
-
             tx.commit();
         } catch (Exception e) {
             tx.rollback();

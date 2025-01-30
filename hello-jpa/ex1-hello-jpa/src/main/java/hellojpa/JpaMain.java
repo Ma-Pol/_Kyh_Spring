@@ -17,35 +17,27 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Member member = new Member();
-            member.setUsername("userA");
-            member.setCreatedBy("KIM");
-            member.setCreatedDate(LocalDateTime.now());
+            Address address = new Address("city", "street", "zipcode");
 
-            Team team = new Team();
-            team.setName("teamA");
-            team.getMembers().add(member);
+            Member member1 = new Member();
+            member1.setUsername("MemberA");
+            member1.setHomeAddress(address);
+            member1.setWorkPeriod(new Period(LocalDateTime.MIN, LocalDateTime.now()));
 
-            em.persist(member);
-            em.persist(team);
+            Member member2 = new Member();
+            member2.setUsername("MemberB");
+//            member2.setHomeAddress(address);
+            member2.setHomeAddress(Address.getCopyAddress(address));
+            member2.setWorkPeriod(new Period(LocalDateTime.MIN, LocalDateTime.now()));
 
-            em.flush();
-            em.clear();
+            em.persist(member1);
+            em.persist(member2);
 
-/*
-//            Member findMember = em.find(Member.class, member.getId());
-            Member findMember = em.getReference(Member.class, member.getId()); // 껍데기만 가져옴. 실제 데이터는 나중에 값을 호출할 때 가져옴.
-            System.out.println("findMember.getClass() = " + findMember.getClass()); // proxy 객체
-            System.out.println("isLoaded = " + emf.getPersistenceUnitUtil().isLoaded(findMember)); // 프록시 인스턴스의 초기화 여부(false)
-            Hibernate.initialize(findMember);
-            System.out.println("isLoaded = " + emf.getPersistenceUnitUtil().isLoaded(findMember)); // true
-
-            em.detach(findMember); // 준영속 상태로 전환
-            System.out.println("findMember = " + findMember.getUsername()); // LazyInitializationException
-*/
-
-            Member findMember = em.find(Member.class, member.getId());
-            System.out.println("findMember.getTeam().getClass() = " + findMember.getTeam().getClass()); // 지연로딩: proxy 객체
+            // 같은 Address 객체를 사용하면 member2의 city 까지 변경됨
+            // 새로운 Address 객체를 만들어서 사용하면 방지할 수 있음
+            // 또는 setHomeAddress 내에서 새로운 객체를 만들어 대입하도록 할 수도 있음
+            // => 불변 객체
+            member1.getHomeAddress().setCity("newCity");
 
             tx.commit();
         } catch (Exception e) {
