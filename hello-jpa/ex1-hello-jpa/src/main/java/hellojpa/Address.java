@@ -1,25 +1,22 @@
 package hellojpa;
 
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Objects;
 
 @Embeddable
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Setter(AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Address {
     private String city;
     private String street;
     private String zipcode;
 
-    public static Address getCopyAddress(Address address) {
-        return new Address(address.getCity(), address.getStreet(), address.getZipcode());
+    public static Address createAddress(String city, String street, String zipcode) {
+        return new Address(city, street, zipcode);
     }
 
     @Override

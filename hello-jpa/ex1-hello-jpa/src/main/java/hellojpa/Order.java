@@ -5,17 +5,21 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Table(name = "orders")
 @Getter
 @Setter
-public class Child {
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "child_id")
+    @Column(name = "order_id")
     private Long id;
 
-    private String name;
+    private Integer orderAmount;
+
+    @Embedded
+    private Address address;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private Parent parent;
+    @JoinColumn(name = "product_id")
+    private Product product;
 }

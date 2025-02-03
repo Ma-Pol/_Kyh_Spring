@@ -18,12 +18,14 @@ public class Team extends BaseEntity {
 
     private String name;
 
-    // 다대일 양방향
-//    @OneToMany(mappedBy = "team")
-//    List<Member> members = new ArrayList<>();
+    @OneToMany(mappedBy = "team")
+    List<Member> members = new ArrayList<>();
 
-    // 일대다 단방향
-    @OneToMany
-    @JoinColumn(name = "team_id")
-    private List<Member> members = new ArrayList<>();
+    @Override
+    public String toString() {
+        return "Team{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

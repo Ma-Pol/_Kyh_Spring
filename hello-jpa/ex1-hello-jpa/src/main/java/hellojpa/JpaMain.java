@@ -4,8 +4,12 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -17,27 +21,20 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Address address = new Address("city", "street", "zipcode");
+            persistMembers(em);
+//            em.flush();
 
-            Member member1 = new Member();
-            member1.setUsername("MemberA");
-            member1.setHomeAddress(address);
-            member1.setWorkPeriod(new Period(LocalDateTime.MIN, LocalDateTime.now()));
+            LocalDateTime searchStartDateTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0);
+            LocalDateTime searchEndDateTime = LocalDateTime.of(2024, 12, 1, 0, 0, 0);
 
-            Member member2 = new Member();
-            member2.setUsername("MemberB");
-//            member2.setHomeAddress(address);
-            member2.setHomeAddress(Address.getCopyAddress(address));
-            member2.setWorkPeriod(new Period(LocalDateTime.MIN, LocalDateTime.now()));
+            // JPQL
+            jpqlSelect(em, searchStartDateTime, searchEndDateTime);
 
-            em.persist(member1);
-            em.persist(member2);
+            // JPA Criteria
+            jpaCriteriaSelect(em, searchStartDateTime, searchEndDateTime);
 
-            // 같은 Address 객체를 사용하면 member2의 city 까지 변경됨
-            // 새로운 Address 객체를 만들어서 사용하면 방지할 수 있음
-            // 또는 setHomeAddress 내에서 새로운 객체를 만들어 대입하도록 할 수도 있음
-            // => 불변 객체
-            member1.getHomeAddress().setCity("newCity");
+            // Native Query
+            nativeQuerySelect(em, searchStartDateTime, searchEndDateTime);
 
             tx.commit();
         } catch (Exception e) {
@@ -49,5 +46,87 @@ public class JpaMain {
 
         // =========== //
         emf.close();
+    }
+
+    private static void jpqlSelect(EntityManager em, LocalDateTime searchStartDateTime, LocalDateTime searchEndDateTime) {
+        System.out.println("\n============== JPQL ==============");
+        List<Member> members1 = em.createQuery("SELECT m FROM Member m WHERE m.username LIKE :username", Member.class)
+                .setParameter("username", "%A%")
+                .getResultList();
+        for (Member member : members1) {
+            System.out.println("member.getUsername() = " + member.getUsername());
+        }
+        System.out.println();
+        List<Member> members2 = em.createQuery("SELECT m FROM Member m WHERE m.createdDate BETWEEN :startDate AND :endDate", Member.class)
+                .setParameter("startDate", searchStartDateTime)
+                .setParameter("endDate", searchEndDateTime)
+                .getResultList();
+        for (Member member : members2) {
+            System.out.println("member.getCreatedDate() = " + member.getCreatedDate());
+        }
+    }
+
+    private static void jpaCriteriaSelect(EntityManager em, LocalDateTime searchStartDateTime, LocalDateTime searchEndDateTime) {
+        System.out.println("\n============== JPA Criteria ==============");
+        // Criteria 사용 준비
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Member> query = cb.createQuery(Member.class);
+
+        // 조회 클래스 지정
+        Root<Member> m = query.from(Member.class);
+
+        CriteriaQuery<Member> cq1 = query.select(m).where(cb.like(m.get("username"), "%A%"));
+        List<Member> members1 = em.createQuery(cq1).getResultList();
+        for (Member member : members1) {
+            System.out.println("member.getUsername() = " + member.getUsername());
+        }
+        System.out.println();
+        CriteriaQuery<Member> cq2 = query.select(m).where(cb.between(m.get("createdDate"), searchStartDateTime, searchEndDateTime));
+        List<Member> members2 = em.createQuery(cq2).getResultList();
+        for (Member member : members2) {
+            System.out.println("member.getCreatedDate() = " + member.getCreatedDate());
+        }
+    }
+
+    private static void nativeQuerySelect(EntityManager em, LocalDateTime searchStartDateTime, LocalDateTime searchEndDateTime) {
+        System.out.println("\n============== Native Query ==============");
+        String nativeQuery1 = "SELECT * FROM member WHERE username LIKE :username";
+        List<Member> members = em.createNativeQuery(nativeQuery1, Member.class)
+                .setParameter("username", "%A%")
+                .getResultList();
+        for (Member member : members) {
+            System.out.println("member.getUsername() = " + member.getUsername());
+        }
+        System.out.println();
+        String nativeQuery2 = "SELECT * FROM member WHERE createdDate BETWEEN :startDate AND :endDate";
+        List<Member> members2 = em.createNativeQuery(nativeQuery2, Member.class)
+                .setParameter("startDate", searchStartDateTime)
+                .setParameter("endDate", searchEndDateTime)
+                .getResultList();
+        for (Member member : members2) {
+            System.out.println("member.getCreatedDate() = " + member.getCreatedDate());
+        }
+    }
+
+    private static void persistMembers(EntityManager em) {
+        Member member1 = new Member();
+        Member member2 = new Member();
+        Member member3 = new Member();
+        Member member4 = new Member();
+
+        member1.setUsername("memAber");
+        member2.setUsername("memberA");
+        member3.setUsername("Amember");
+        member4.setUsername("memberXXX");
+
+        member1.setCreatedDate(LocalDateTime.of(2024, 1, 1, 0, 0, 0));
+        member2.setCreatedDate(LocalDateTime.of(2024, 12, 1, 0, 0, 0));
+        member3.setCreatedDate(LocalDateTime.of(2025, 1, 1, 0, 0, 0));
+        member4.setCreatedDate(LocalDateTime.of(2025, 12, 1, 0, 0, 0));
+
+        em.persist(member1);
+        em.persist(member2);
+        em.persist(member3);
+        em.persist(member4);
     }
 }
