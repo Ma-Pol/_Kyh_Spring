@@ -3,6 +3,7 @@ package hellojpa;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ public class Team extends BaseEntity {
 
     private String name;
 
+    @BatchSize(size = 100) //
     @OneToMany(mappedBy = "team")
     List<Member> members = new ArrayList<>();
 
